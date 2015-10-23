@@ -3,14 +3,15 @@
 /* jshint expr: true */
 var expect = require('chai').expect;
 var EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
+var path = require('path');
 
 function getMirageAddon(options) {
-  var dummyApp;
-  if (options) {
-    dummyApp = new EmberAddon(options);
-  } else {
-    dummyApp = new EmberAddon();
-  }
+  options = options || {};
+  options.mirage = options.mirage || {};
+  options.mirage.directory = options.mirage.directory || path.resolve(__dirname, path.join('..', 'dummy', 'mirage'));
+
+  var dummyApp = new EmberAddon(options);
+
   return findMirage(dummyApp);
 }
 

@@ -10,6 +10,9 @@ module.exports = {
   included: function included(app) {
     this.app = app;
     this.addonConfig = this.app.project.config(app.env)['ember-cli-mirage'] || {};
+    this.addonBuildConfig = this.app.options.mirage || {};
+    this.mirageDirectory = this.addonBuildConfig['directory'] || path.join(this.app.project.root, '/mirage');
+
     this.miragePath = this.addonConfig['miragePath'] || path.join(this.app.project.root, '/mirage');
 
     if (this._shouldIncludeFiles()) {
@@ -38,7 +41,7 @@ module.exports = {
 
   treeForApp: function(name) {
     var originalAppTree = unwatchedTree(path.resolve(__dirname, 'app'));
-    var mirageFilesTree = new Funnel(this.miragePath, {
+    var mirageFilesTree = new Funnel(this.mirageDirectory, {
       destDir: 'mirage'
     });
 
