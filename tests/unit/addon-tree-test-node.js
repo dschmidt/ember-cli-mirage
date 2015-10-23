@@ -30,22 +30,18 @@ describe('Addon', function() {
     delete process.env.EMBER_ENV;
   });
 
-  describe('#treeFor', function() {
+  var treeForTests = function(name) {
     it('returns an empty tree in production environment by default', function() {
       process.env.EMBER_ENV = 'production';
-      var addonTree = getMirageAddon().treeFor('addon');
+      var addonTree = getMirageAddon().treeFor(name);
 
-      if (addonTree._inputNodes) {
-        expect(addonTree._inputNodes.length).to.equal(0);
-      } else {
-        expect(addonTree._inputNodes).to.be.undefined;
-      }
+      expect(addonTree).to.be.undefined;
     });
 
     ['development', 'test'].forEach(function(environment) {
       it('returns a tree in ' + environment + ' environment by default', function() {
         process.env.EMBER_ENV = environment;
-        var addonTree = getMirageAddon().treeFor('addon');
+        var addonTree = getMirageAddon().treeFor(name);
 
         expect(addonTree._inputNodes.length).to.not.equal(0);
       });
@@ -54,59 +50,18 @@ describe('Addon', function() {
     it('returns a tree in production environment when enabled is specified', function() {
       process.env.EMBER_ENV = 'production';
       var addon = getMirageAddon({ configPath: 'tests/fixtures/config/environment-production-enabled' });
-      var addonTree = addon.treeFor('addon');
+      var addonTree = addon.treeFor(name);
 
       expect(addonTree._inputNodes.length).to.not.equal(0);
     });
+  };
 
+  describe('#treeFor addon', function() {
+    treeForTests('addon');
   });
 
-
-  describe('#postprocessTree', function() {
-
-    it('excludes app/mirage tree in production environment', function() {
-      process.env.EMBER_ENV = 'production';
-      var excludePretenderDirCalled = false;
-      var dummyApp = new EmberAddon();
-      var addon = findMirage(dummyApp);
-      addon._excludePretenderDir = function(tree) {
-        excludePretenderDirCalled = true;
-        return tree;
-      };
-      dummyApp.toTree();
-
-      expect(excludePretenderDirCalled).to.be.equal(true);
-    });
-
-    ['development', 'test'].forEach(function(environment) {
-      it('includes app/mirage tree in ' + environment + ' environment', function() {
-        process.env.EMBER_ENV = environment;
-        var excludePretenderDirCalled = false;
-        var dummyApp = new EmberAddon();
-        var addon = findMirage(dummyApp);
-        addon._excludePretenderDir = function(tree) {
-          excludePretenderDirCalled = true;
-          return tree;
-        };
-        dummyApp.toTree();
-
-        expect(excludePretenderDirCalled).to.be.equal(false);
-      });
-    });
-
-    it('includes app/mirage tree in production environment when enabled is set to true', function() {
-      process.env.EMBER_ENV = 'production';
-      var excludePretenderDirCalled = false;
-      var dummyApp = new EmberAddon({ configPath: 'tests/fixtures/config/environment-production-enabled' });
-      var addon = findMirage(dummyApp);
-      addon._excludePretenderDir = function(tree) {
-        excludePretenderDirCalled = true;
-        return tree;
-      };
-      dummyApp.toTree();
-
-      expect(excludePretenderDirCalled).to.be.equal(false);
-    });
-
+  describe('#treeFor app', function() {
+    treeForTests('app');
   });
+
 });

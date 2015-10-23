@@ -28,11 +28,15 @@ module.exports = {
     return path.join(__dirname, 'blueprints');
   },
 
-  treeForApp: function(name) {
+  treeFor: function(name) {
     if (!this._shouldIncludeFiles()) {
       return;
     }
 
+    return this._super.treeFor.apply(this, arguments);
+  },
+
+  treeForApp: function(name) {
     var originalAppTree = unwatchedTree(path.resolve(__dirname, 'app'));
     var mirageFilesTree = new Funnel(this.miragePath, {
       destDir: 'mirage'
