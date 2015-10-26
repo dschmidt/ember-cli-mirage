@@ -7,8 +7,8 @@ var path = require('path');
 
 function getMirageAddon(options) {
   options = options || {};
-  options.mirage = options.mirage || {};
-  options.mirage.directory = options.mirage.directory || path.resolve(__dirname, path.join('..', 'dummy', 'mirage'));
+  options['ember-cli-mirage'] = options['ember-cli-mirage'] || {};
+  options['ember-cli-mirage'].directory = options['ember-cli-mirage'].directory || path.resolve(__dirname, path.join('..', 'dummy', 'mirage'));
 
   var dummyApp = new EmberAddon(options);
 

@@ -10,7 +10,7 @@ module.exports = {
   included: function included(app) {
     this.app = app;
     this.addonConfig = this.app.project.config(app.env)['ember-cli-mirage'] || {};
-    this.addonBuildConfig = this.app.options.mirage || {};
+    this.addonBuildConfig = this.app.options['ember-cli-mirage'] || {};
     this.mirageDirectory = this.addonBuildConfig['directory'] || path.join(this.app.project.root, '/mirage');
 
     this.miragePath = this.addonConfig['miragePath'] || path.join(this.app.project.root, '/mirage');
